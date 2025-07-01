@@ -8,8 +8,8 @@ from app.schemas.esquema_cliente import ClienteCreate
 from app.schemas.esquema_empleado import EmpleadoCreate
 from app.schemas.esquema_servicio import ServicioCreate
 
-
-def setup_dependencies(session):
+# Utilidad para generar datos únicos
+def setup_dependencies(session, duracion_servicio=30):
     telefono_unico = f"15{uuid.uuid4().hex[:6]}"
     email_unico = f"cliente_{uuid.uuid4().hex[:8]}@test.com"
     email_empleado = f"empleado_{uuid.uuid4().hex[:8]}@test.com"
@@ -27,7 +27,7 @@ def setup_dependencies(session):
     ))
     servicio = crud_servicio.create_servicio(session, ServicioCreate(
         nombre_servicio="Barba",
-        duracion=30,
+        duracion=duracion_servicio,
         precio=800
     ))
     return cliente.id_cliente, empleado.id_empleado, servicio.id_servicio
@@ -47,9 +47,19 @@ def test_create_turno(session):
     ))
     assert turno.id_turno is not None
 
+def test_turno_duracion_no_positiva_rechazada(session):
+    # Crear servicio con duración inválida
+    with pytest.raises(Exception) as exc:
+        crud_servicio.create_servicio(session, ServicioCreate(
+            nombre_servicio="Corte Mágico",
+            duracion=0,
+            precio=500
+        ))
+    assert "positive" in str(exc.value).lower()
+
 
 def test_turno_solapado_falla(session):
-    id_cliente, id_empleado, id_servicio = setup_dependencies(session)
+    id_cliente, id_empleado, id_servicio = setup_dependencies(session, duracion_servicio=30)
     fecha_hora = datetime.now() + timedelta(days=1)
 
     crud_turno.create_turno(session, TurnoCreate(

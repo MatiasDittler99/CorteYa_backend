@@ -16,7 +16,7 @@ def listar_relaciones(db: Session = Depends(get_session)):
 def crear_relacion(rel: EmpleadoEspecialidadCreate, db: Session = Depends(get_session)):
     return crud_empleado_especialidad.create_empleado_especialidad(db, rel)
 
-@router.delete("/")
+@router.delete("/", status_code=204)
 def eliminar_relacion(id_empleado: int, id_especialidad: int, db: Session = Depends(get_session)):
     eliminado = crud_empleado_especialidad.delete_empleado_especialidad(db, id_empleado, id_especialidad)
     if not eliminado:

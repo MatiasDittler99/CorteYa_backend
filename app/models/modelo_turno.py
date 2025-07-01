@@ -1,11 +1,18 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
 from datetime import date, time
+from enum import Enum as PyEnum
+from sqlalchemy import Column, Enum
 
 if TYPE_CHECKING:
     from app.models.modelo_cliente import Cliente
     from app.models.modelo_empleado import Empleado
     from app.models.modelo_servicio import Servicio
+    
+class EstadoTurnoEnum(str, PyEnum):
+    pendiente = "pendiente"
+    confirmado = "confirmado"
+    cancelado = "cancelado"
 
 class Turno(SQLModel, table=True):
     __tablename__="turno"
@@ -17,7 +24,9 @@ class Turno(SQLModel, table=True):
 
     fecha: date
     hora: time
-    estado: str  # Validar valores en lógica (pendiente, confirmado, cancelado)
+    estado: EstadoTurnoEnum = Field(
+        sa_column=Column(Enum(EstadoTurnoEnum), nullable=False)
+    )
 
     cliente: Optional["Cliente"] = Relationship(back_populates="turnos")
     empleado: Optional["Empleado"] = Relationship(back_populates="turnos")
