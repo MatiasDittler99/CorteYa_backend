@@ -1,13 +1,31 @@
 # CorteYa Backend
 
-## 🚀 Tecnologías
+## Tecnologías
 
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [SQLModel](https://sqlmodel.tiangolo.com/)
-- [SQLite](https://www.sqlite.org/index.html)
-- [Alembic](https://alembic.sqlalchemy.org/)
-- [Pydantic](https://docs.pydantic.dev/)
+- [Python 3.12]
+- [FastAPI](https://fastapi.tiangolo.com/) para crear una API REST rápida y eficiente.
+- [SQLModel](https://sqlmodel.tiangolo.com/) (basado en SQLAlchemy y Pydantic) para la definición de modelos y manejo de base de datos.
+- [SQLite](https://www.sqlite.org/index.html) como base de datos ligera para desarrollo.
+- [Alembic](https://alembic.sqlalchemy.org/) para migraciones de base de datos (si aplica).
+- [Pydantic](https://docs.pydantic.dev/) para hacer las validaciones de datos
 - [Pytest](https://docs.pytest.org/)
+- [Faker] para generación de datos de prueba
+- [passlib (bcrypt)] para gestión segura de contraseñas
+- Autenticación con sesiones gestionadas vía cookies HTTPOnly.
+
+## Funcionalidades principales
+
+- Registro, actualización y eliminación de usuarios con control de acceso.
+
+- Inicio de sesión y cierre de sesión con manejo de sesiones y cookies.
+
+- Gestión completa de clientes y empleados.
+
+- Administración de especialidades y servicios vinculados a empleados.
+
+- Gestión y asignación de turnos con estados configurables (pendiente, confirmado, cancelado).
+
+- Seed inicial para cargar datos de prueba y crear un usuario administrador (admin).
 
 ## Instalación y configuracion
 
@@ -23,12 +41,18 @@ venv\Scripts\activate # Windows
 3. Instalar dependencias:
 pip install -r requirements.txt
 
-4. Crear `.env` basado en `.env.example` o Copiar el archivo .env.example a .env: cp .env.example .env y Editá el .env con la URL de tu base de datos: DATABASE_URL=sqlite:///./corteya.db
+4. Ejecutar migraciones (si aplica):
+alembic upgrade head
 
-5. Iniciar servidor:
+5. Ejecutar el seed para crear datos iniciales y el usuario admin:
+python -m app.core.seed
+
+6. Crear `.env` basado en `.env.example` o Copiar el archivo .env.example a .env: cp .env.example .env y Editá el .env con la URL de tu base de datos: DATABASE_URL=sqlite:///./corteya.db
+
+7. Iniciar servidor:
 uvicorn app.main:app --reload
 
-6. Acceder a http://127.0.0.1:8000/docs para la documentación API
+8. Acceder a http://127.0.0.1:8000/docs para la documentación API
 
 ## Tests
 pytest
@@ -40,6 +64,29 @@ alembic revision --autogenerate -m "Mensaje de la migración"
 
 2. Para aplicar las migraciones pendientes:
 alembic upgrade head
+
+## Estructura del proyecto
+
+- app/models/: Modelos SQLModel para base de datos.
+
+- app/schemas/: Schemas Pydantic para validación y serialización.
+
+- app/routers/: Rutas FastAPI organizadas por funcionalidad.
+
+- app/services/: Lógica de negocio y funciones auxiliares.
+
+- app/core/: Configuración de base de datos, autenticación, y seed.
+
+- app/tests/: Tests para rutas y servicios.
+
+## Uso de la API
+- Para ingresar con el usuario administrador:
+
+Usuario: admin
+
+Contraseña: admin123
+
+- Endpoints para registro, login, logout, manejo de usuarios, clientes, empleados, servicios, especialidades y turnos.
 
 ## Endpoints API RESTful
 Método	Endpoint	   Descripción	Request Body (si aplica)
