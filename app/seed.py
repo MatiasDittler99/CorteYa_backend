@@ -10,6 +10,9 @@ from app.models.modelo_empleado_especialidad import EmpleadoEspecialidad
 from app.models.modelo_turno import Turno
 from app.core.base_de_datos import engine
 from random import sample
+from app.models.modelo_usuario import Usuario
+from app.services.autenticacion import get_password_hash
+
 
 faker = Faker()
 
@@ -20,7 +23,7 @@ def seed_db():
         if existe_cliente:
             print("Datos ya cargados, saltando seed.")
             return
-        
+
         # 1. Crear Clientes
         clientes = []
         for _ in range(15):
@@ -107,3 +110,22 @@ def seed_db():
         
         session.commit()
         print("Seed completo: clientes, empleados, especialidades, servicios, relaciones y turnos.")
+
+# En seed.py
+def crear_usuario_admin_si_no_existe():
+    with Session(engine) as session:
+        existe_usuario = session.exec(select(Usuario).where(Usuario.username == "admin")).first()
+        if not existe_usuario:
+            usuario_inicial = Usuario(
+                username="admin",
+                email="admin@example.com",
+                hashed_password=get_password_hash("admin123"),
+                nombre="Admin",
+                apellido="Sistema",
+                fecha_nacimiento=date(1990, 1, 1),
+            )
+            session.add(usuario_inicial)
+            session.commit()
+            print("Usuario inicial creado.")
+        else:
+            print("Usuario inicial ya existe.")

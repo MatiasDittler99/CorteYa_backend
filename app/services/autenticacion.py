@@ -1,9 +1,10 @@
+from datetime import date
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 from fastapi import HTTPException
 from app.models.modelo_usuario import Usuario
 from app.schemas.esquema_usuario import UsuarioCreate, UsuarioUpdate
-
+from app.core.base_de_datos import engine
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_password_hash(password: str) -> str:

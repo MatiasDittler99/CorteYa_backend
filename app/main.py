@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 from app.core.base_de_datos import engine  # Donde tengas el engine configurado
-from app.seed import seed_db
+from app.seed import seed_db, crear_usuario_admin_si_no_existe
 
 # Importar los routers
 from app.routers import (
@@ -22,6 +22,7 @@ app = FastAPI(title="API de Peluquería/Barbería")
 def on_startup():
     SQLModel.metadata.create_all(engine)
     seed_db()
+    crear_usuario_admin_si_no_existe()
     
 # Incluir los routers
 app.include_router(ruta_cliente.router)
