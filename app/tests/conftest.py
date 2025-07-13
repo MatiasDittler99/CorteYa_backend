@@ -5,6 +5,9 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.core.base_de_datos import get_session  # tu dependencia original
+from app.models.modelo_usuario import Usuario
+from app.routers.ruta_autenticacion import get_current_user
+from datetime import date
 
 # Creamos un engine en memoria SOLO para tests, sin tocar el engine original
 engine_test = create_engine(
@@ -38,3 +41,28 @@ def session_fixture():
 def client_fixture():
     with TestClient(app) as client:
         yield client
+
+# 🧪 Fixture que prepara la DB y la sesión
+@pytest.fixture(scope="function", autouse=True)
+def async_session():
+    SQLModel.metadata.drop_all(engine_test)
+    SQLModel.metadata.create_all(engine_test)
+    with Session(engine_test) as session:
+        yield session
+
+# 🚨 Sobrescribe get_current_user para que las rutas que lo usen no fallen
+@pytest.fixture(autouse=True)
+def override_current_user_fixture():
+    def override_get_current_user():
+        return Usuario(
+            id_usuario=999,
+            nombre="Admin",
+            apellido="Test",
+            email="admin@test.com",
+            username="admin",
+            hashed_password="fake",
+            fecha_nacimiento=date(1990, 1, 1)
+        )
+    app.dependency_overrides[get_current_user] = override_get_current_user
+    yield
+    app.dependency_overrides.pop(get_current_user, None)

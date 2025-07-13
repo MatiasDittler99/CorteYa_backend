@@ -11,6 +11,8 @@ from app.routers import (
     ruta_empleado_especialidad,
     ruta_servicio,
     ruta_turno,
+    ruta_autenticacion,
+    ruta_usuario
 )
 
 app = FastAPI(title="API de Peluquería/Barbería")
@@ -28,4 +30,6 @@ app.include_router(ruta_especialidad.router)
 app.include_router(ruta_empleado_especialidad.router)
 app.include_router(ruta_servicio.router)
 app.include_router(ruta_turno.router)
+app.include_router(ruta_autenticacion.router)
+app.include_router(ruta_usuario.router)
 

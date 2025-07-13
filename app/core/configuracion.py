@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     API_KEY: str = Field(default="", alias="API_KEY")  # Valor por defecto: cadena vacía
     BASE_URL: str = Field(default="", alias="BASE_URL")
     DATABASE_URL: str = Field(..., alias="DATABASE_URL")  # Este sigue siendo obligatorio
-
+        
     # Configuración adicional para indicar que las variables deben cargarse desde un archivo .env
     model_config = SettingsConfigDict(env_file=".env")
 

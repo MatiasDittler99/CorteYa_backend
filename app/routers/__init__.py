@@ -5,4 +5,6 @@ from . import (
     ruta_empleado_especialidad,
     ruta_servicio,
     ruta_turno,
+    ruta_autenticacion,
+    ruta_usuario
 )

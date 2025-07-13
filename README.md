@@ -100,3 +100,93 @@ El endpoint GET /turnos soporta filtros por query params, por ejemplo:
 /turnos?cliente_id=3
 
 /turnos?empleado_id=2
+
+Autenticacion
+
+1. Crear nuevo usuario (Signup)
+Método: POST
+
+Endpoint: /auth/signup
+
+Descripción: Crear un nuevo usuario con nombre, apellido, fecha de nacimiento, email, username y contraseña.
+
+Body (JSON):
+{
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "fecha_nacimiento": "1990-05-15",
+  "email": "juan@example.com",
+  "username": "juan123",
+  "password": "supersecreto"
+}
+
+Cookies: No requiere
+
+2. Iniciar sesión (Login)
+Método: POST
+
+Endpoint: /auth/login
+
+Descripción: Autenticar usuario y recibir cookie session_id HTTPOnly.
+
+Body (JSON):
+{
+  "username": "juan123",
+  "password": "supersecreto"
+}
+Cookies: No requiere para la solicitud, pero la respuesta incluirá la cookie session_id.
+
+3. Obtener datos del usuario autenticado (Me)
+Método: GET
+
+Endpoint: /auth/me
+
+Descripción: Obtener información del usuario logueado usando la cookie session_id.
+
+Body: No tiene
+
+Cookies: Requiere cookie session_id (debe estar presente en la solicitud).
+
+4. Actualizar datos del usuario autenticado
+Método: PUT
+
+Endpoint: /auth/me
+
+Descripción: Actualizar nombre, email, contraseña u otros campos del usuario actual.
+
+Body (JSON):
+{
+  "nombre": "Juan Carlos",
+  "email": "juanc@example.com",
+  "password": "nuevo12345"
+}
+Cookies: Requiere cookie session_id
+
+5. Eliminar cuenta del usuario autenticado
+Método: DELETE
+
+Endpoint: /auth/me
+
+Descripción: Eliminar la cuenta del usuario autenticado.
+
+Body: No tiene
+
+Cookies: Requiere cookie session_id
+
+6. Cerrar sesión (Logout)
+Método: POST
+
+Endpoint: /auth/logout
+
+Descripción: Cierra la sesión y elimina la cookie session_id.
+
+Body: No tiene
+
+Cookies: Requiere cookie session_id
+
+Notas importantes
+Para las rutas que requieren autenticación, la cookie session_id debe estar presente en la solicitud.
+
+En Postman, asegurate de tener habilitada la opción para enviar cookies automáticamente o manejar las cookies manualmente.
+
+La cookie session_id se genera al hacer login y es HTTPOnly y segura.
