@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from sqlmodel import SQLModel
 from app.core.base_de_datos import engine  # Donde tengas el engine configurado
 from app.seed import seed_db, crear_usuario_admin_si_no_existe
+from fastapi.middleware.cors import CORSMiddleware
 
 # Importar los routers
 from app.routers import (
@@ -16,6 +17,15 @@ from app.routers import (
 )
 
 app = FastAPI(title="API de Peluquería/Barbería")
+
+# CORS para desarrollo (acepta todo)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5000", "http://127.0.0.1:5000", "https://matiasdittler99.github.io"],  # ⬅️ Durante desarrollo
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Crear tablas al iniciar la app
 @app.on_event("startup")
