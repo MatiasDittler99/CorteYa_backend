@@ -18,6 +18,10 @@ from app.routers import (
 
 app = FastAPI(title="API de Peluquería/Barbería")
 
+@app.get("/")
+def read_root():
+    return {"message": "CorteYa Backend Funcionando"}
+
 # CORS para desarrollo (acepta todo)
 app.add_middleware(
     CORSMiddleware,
