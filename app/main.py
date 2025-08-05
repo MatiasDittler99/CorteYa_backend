@@ -25,7 +25,7 @@ def read_root():
 # CORS para desarrollo (acepta todo)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5000", "http://127.0.0.1:5000", "https://matiasdittler99.github.io"],  # ⬅️ Durante desarrollo
+    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000", "https://matiasdittler99.github.io-CorteYa"],  # ⬅️ Durante desarrollo
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
