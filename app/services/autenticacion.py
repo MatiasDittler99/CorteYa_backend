@@ -50,6 +50,9 @@ def actualizar_usuario(user: Usuario, data: UsuarioUpdate, session: Session) -> 
     if data.username:
         user.username = data.username
     if data.password:
+        # Verificar que la nueva contraseña no sea igual a la anterior
+        if verify_password(data.password, user.hashed_password):
+            raise HTTPException(status_code=400, detail="La nueva contraseña debe ser diferente a la anterior")
         user.hashed_password = get_password_hash(data.password)
 
     session.add(user)
