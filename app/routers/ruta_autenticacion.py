@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, Cookie
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, Cookie
 from sqlmodel import Session
 from app.core.base_de_datos import get_session
 from app.models.modelo_usuario import Usuario
@@ -25,7 +25,7 @@ def login(data: UsuarioLogin, response: Response, db: Session = Depends(get_sess
     sesiones[session_id] = user.id_usuario
 
     # Setear cookie httpOnly para manejar sesión
-    response.set_cookie(key="session_id", value=session_id, httponly=True, secure=False)
+    response.set_cookie(key="session_id", value=session_id, httponly=True, secure=False,samesite="none")
     
     return user
 
@@ -92,3 +92,7 @@ def eliminar_mi_cuenta(
         response.delete_cookie(key="session_id")
 
     return Response(status_code=204)
+
+@router.get("/debug-cookies")
+def debug_cookies(request: Request):
+    return {"cookies": request.cookies}
