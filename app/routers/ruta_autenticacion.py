@@ -25,7 +25,7 @@ def login(data: UsuarioLogin, response: Response, db: Session = Depends(get_sess
     sesiones[session_id] = user.id_usuario
 
     # Setear cookie httpOnly para manejar sesión
-    response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
+    response.set_cookie(key="session_id", value=session_id, httponly=True, secure=False)
     
     return user
 
@@ -59,20 +59,20 @@ def update_me(
 
 from fastapi import status
 
-@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
-def delete_me(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_session),
-    response: Response = None
-):
-    db.delete(current_user)
-    db.commit()
+# @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+# def delete_me(
+#     current_user=Depends(get_current_user),
+#     db: Session = Depends(get_session),
+#     response: Response = None
+# ):
+#     db.delete(current_user)
+#     db.commit()
     
-    # Eliminar la cookie de sesión si existe
-    if response:
-        response.delete_cookie(key="session_id")
+#     # Eliminar la cookie de sesión si existe
+#     if response:
+#         response.delete_cookie(key="session_id")
     
-    return
+#     return
 
 @router.delete("/me", status_code=204)
 def eliminar_mi_cuenta(

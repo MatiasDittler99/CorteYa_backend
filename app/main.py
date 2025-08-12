@@ -3,6 +3,7 @@ from sqlmodel import SQLModel
 from app.core.base_de_datos import engine  # Donde tengas el engine configurado
 from app.seed import seed_db, crear_usuario_admin_si_no_existe
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 # Importar los routers
 from app.routers import (
