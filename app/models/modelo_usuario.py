@@ -8,7 +8,7 @@ class Usuario(SQLModel, table=True):
     id_usuario: Optional[int] = Field(default=None, primary_key=True)
     nombre: str
     apellido: str
-    fecha_nacimiento: date
+    fecha_nacimiento: Optional[date] = None
     email: str = Field(unique=True)
     username: str = Field(unique=True, index=True)
     hashed_password: str

@@ -45,7 +45,10 @@ def actualizar_usuario(user: Usuario, data: UsuarioUpdate, session: Session) -> 
         if data.apellido:
             user.apellido = data.apellido
         if data.fecha_nacimiento:
-            user.fecha_nacimiento = data.fecha_nacimiento
+            if isinstance(data.fecha_nacimiento, str):
+                user.fecha_nacimiento = date.fromisoformat(data.fecha_nacimiento)
+            else:
+                user.fecha_nacimiento = data.fecha_nacimiento
         if data.email:
             user.email = data.email
         if data.username:

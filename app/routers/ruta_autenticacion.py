@@ -47,7 +47,13 @@ def update_me(
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_session)
 ):
-    return auth.actualizar_usuario(current_user, data, db)
+    try:
+        return auth.actualizar_usuario(current_user, data, db)
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("Error en /auth/me PUT:", e)
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_mi_cuenta(
