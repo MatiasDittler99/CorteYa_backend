@@ -39,23 +39,26 @@ def autenticar_usuario(session: Session, username: str, password: str) -> Usuari
     return user
 
 def actualizar_usuario(user: Usuario, data: UsuarioUpdate, session: Session) -> Usuario:
-    if data.nombre:
-        user.nombre = data.nombre
-    if data.apellido:
-        user.apellido = data.apellido
-    if data.fecha_nacimiento:
-        user.fecha_nacimiento = data.fecha_nacimiento
-    if data.email:
-        user.email = data.email
-    if data.username:
-        user.username = data.username
-    if data.password:
-        # Verificar que la nueva contraseña no sea igual a la anterior
-        if verify_password(data.password, user.hashed_password):
-            raise HTTPException(status_code=400, detail="La nueva contraseña debe ser diferente a la anterior")
-        user.hashed_password = get_password_hash(data.password)
+    try:
+        if data.nombre:
+            user.nombre = data.nombre
+        if data.apellido:
+            user.apellido = data.apellido
+        if data.fecha_nacimiento:
+            user.fecha_nacimiento = data.fecha_nacimiento
+        if data.email:
+            user.email = data.email
+        if data.username:
+            user.username = data.username
+        if data.password:
+            if verify_password(data.password, user.hashed_password):
+                raise HTTPException(status_code=400, detail="La nueva contraseña debe ser diferente a la anterior")
+            user.hashed_password = get_password_hash(data.password)
 
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user
+    except Exception as e:
+        print("Error al actualizar usuario:", e)  # <-- para ver el error en logs
+        raise
