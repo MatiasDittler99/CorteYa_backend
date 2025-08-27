@@ -13,4 +13,4 @@ class Cliente(SQLModel, table=True):
     telefono: str = Field(unique=True)
     email: str = Field(unique=True)
 
-    turnos: List["Turno"] = Relationship(back_populates="cliente", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    turnos: List["Turno"] = Relationship(back_populates="cliente")
