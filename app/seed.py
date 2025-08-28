@@ -1,5 +1,6 @@
 from faker import Faker
 from sqlmodel import Session, select
+from sqlalchemy.orm import selectinload
 from datetime import datetime, timedelta, time, date
 from random import choice, randint, sample
 from app.models.modelo_cliente import Cliente
@@ -88,7 +89,6 @@ def seed_db():
         # 6. Crear Turnos
         estados = ["pendiente", "confirmado", "cancelado"]
         for cliente in clientes:
-            # cada cliente tendrá entre 1 y 3 turnos
             for _ in range(randint(1, 3)):
                 empleado = choice(empleados)
                 servicio = choice(servicios)
@@ -104,6 +104,21 @@ def seed_db():
                 )
                 session.add(turno)
         session.commit()
+
+        # Mostrar clientes con sus turnos usando selectinload
+        clientes_con_turnos = session.exec(
+            select(Cliente)
+            .options(
+                selectinload(Cliente.turnos).selectinload(Turno.empleado),
+                selectinload(Cliente.turnos).selectinload(Turno.servicio)
+            )
+        ).all()
+
+        for cliente in clientes_con_turnos:
+            print(f"{cliente.nombre_completo} tiene {len(cliente.turnos)} turnos")
+            for t in cliente.turnos:
+                print(f" - Turno {t.id_turno}: {t.servicio.nombre_servicio} con {t.empleado.nombre_completo} a las {t.hora}")
+
         print("Seed completo: clientes, empleados, especialidades, servicios, relaciones y turnos.")
 
 def crear_usuario_admin_si_no_existe():
