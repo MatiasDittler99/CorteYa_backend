@@ -1,6 +1,7 @@
 from typing import List, Optional
 from datetime import datetime, timedelta, time as dtime
 from sqlmodel import Session, select
+from sqlalchemy.orm import selectinload
 from app.models.modelo_turno import Turno
 from app.models.modelo_servicio import Servicio
 from app.models.modelo_cliente import Cliente
@@ -8,11 +9,27 @@ from app.models.modelo_empleado import Empleado
 from app.schemas.esquema_turno import TurnoCreate
 from fastapi import HTTPException
 
+# def get_turnos(db: Session) -> List[Turno]:
+#     return db.exec(select(Turno)).all()
+
+# def get_turno(db: Session, turno_id: int) -> Optional[Turno]:
+#     return db.get(Turno, turno_id)
+
 def get_turnos(db: Session) -> List[Turno]:
-    return db.exec(select(Turno)).all()
+    query = select(Turno).options(
+        selectinload(Turno.cliente),
+        selectinload(Turno.empleado),
+        selectinload(Turno.servicio)
+    )
+    return db.exec(query).all()
 
 def get_turno(db: Session, turno_id: int) -> Optional[Turno]:
-    return db.get(Turno, turno_id)
+    query = select(Turno).where(Turno.id_turno == turno_id).options(
+        selectinload(Turno.cliente),
+        selectinload(Turno.empleado),
+        selectinload(Turno.servicio)
+    )
+    return db.exec(query).first()
 
 def create_turno(db: Session, turno: TurnoCreate) -> Turno:
     # Validar fecha y hora no en el pasado
