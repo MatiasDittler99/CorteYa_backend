@@ -9,7 +9,7 @@ router = APIRouter(prefix="/clientes-con-turnos", tags=["Clientes con Turnos"])
 
 @router.get("/", response_model=List[ClienteRead])
 def listar_clientes_con_turnos(db: Session = Depends(get_session)):
-    clientes = session.exec(select(Cliente)).all()
+    clientes = db.exec(select(Cliente)).all()
     # SQLModel carga relaciones lazy, entonces accedemos a cliente.turnos para cargarlas
     for cliente in clientes:
         cliente.turnos  # Esto fuerza la carga de turnos
