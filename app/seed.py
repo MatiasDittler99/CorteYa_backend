@@ -33,6 +33,8 @@ def seed_db():
             session.add(cliente)
             clientes.append(cliente)
         
+        session.flush()  # ahora cliente.id_cliente tiene valor
+
         # 2. Crear Empleados
         empleados = []
         for _ in range(8):
